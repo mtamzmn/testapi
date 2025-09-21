@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>تفاصيل المنتج | مطعم الزمن القديم</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+body { font-family: 'Cairo', sans-serif; background: #fefefe; color: #333; }
+.navbar { background: #fff; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+.navbar-brand { font-weight: 700; color: #d35400 !important; }
+
+.product-image { width: 100%; border-radius: 15px; object-fit: cover; max-height: 450px; box-shadow: 0 6px 20px rgba(0,0,0,0.1); }
+.product-title { font-size: 2rem; font-weight: 700; color: #333; margin-top: 20px; }
+.product-price { font-size: 1.6rem; font-weight: bold; color: #d35400; margin-top: 10px; }
+.product-description { margin-top: 20px; font-size: 1rem; color: #555; line-height: 1.6; }
+.input-group { max-width: 150px; margin-top: 20px; }
+
+.btn-primary { background: #d35400; border: none; padding: 10px 20px; font-size: 1rem; }
+.btn-primary:hover { background: #b84300; }
+.btn-success { margin-top: 10px; }
+
+.comment-section { margin-top: 50px; background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 6px 18px rgba(0,0,0,0.08); }
+.comment { background: #f8f8f8; border-left: 5px solid #d35400; padding: 15px; margin-bottom: 15px; border-radius: 8px; }
+.comment-text { font-size: 1rem; color: #555; }
+
+.comment-form textarea { width: 100%; border-radius: 8px; border: 1px solid #ddd; font-size: 1rem; padding: 10px; resize: vertical; }
+.comment-form button { background-color: #d35400; color: #fff; border: none; border-radius: 8px; padding: 8px 20px; margin-top: 10px; }
+.comment-form button:hover { background-color: #b84300; }
+
+.toast-container { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 1050; width: 80%; max-width: 400px; }
+.toast { background-color: #28a745; color: #fff; border-radius: 8px; padding: 15px; font-size: 1rem; }
+.toast-header { background-color: #218838; color: white; font-weight: bold; }
+</style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg">
+  <div class="container">
+    <a class="navbar-brand" href="index.html"><i class="bi bi-house-door"></i> الرئيسية</a>
+    <span class="ms-auto fs-5">تفاصيل المنتج</span>
+  </div>
+</nav>
+
+<div class="container mt-5">
+  <div class="row g-4">
+    <div class="col-md-6">
+      <img id="product-image" src="" alt="صورة المنتج" class="product-image">
+    </div>
+    <div class="col-md-6">
+      <h1 id="product-title" class="product-title">اسم المنتج</h1>
+      <p id="product-price" class="product-price" data-price="0">0 ريال</p>
+      <p id="product-description" class="product-description">وصف المنتج</p>
+
+      <div class="input-group">
+        <span class="input-group-text">الكمية</span>
+        <input type="number" id="quantity" class="form-control" value="1" min="1" oninput="updatePrice()">
+      </div>
+
+      <button class="btn btn-primary mt-3" onclick="addToCart()">أضف إلى السلة</button>
+      <a href="cart.html" class="btn btn-success mt-3">انتقل إلى السلة</a>
+    </div>
+  </div>
+
+  <!-- قسم التعليقات -->
+  <div class="comment-section">
+    <h3>التعليقات</h3>
+    <div id="comments-container"></div>
+
+    <div class="comment-form">
+      <textarea id="comment-text" rows="4" placeholder="اكتب تعليقك هنا..."></textarea>
+      <button onclick="addNewComment()">إضافة تعليق</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast Notification -->
+<div class="toast-container">
+  <div id="toast" class="toast hide" role="alert" aria-live="assertive" aria-atomic="true">
+    <div class="toast-header">
+      <strong class="me-auto">إشعار</strong>
+      <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+    <div class="toast-body">
+      تم إضافة المنتج إلى السلة بنجاح!
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+function updatePrice() {
+  const quantity = parseInt(document.getElementById('quantity').value);
+  const price = parseFloat(document.getElementById('product-price').getAttribute('data-price'));
+  const totalPrice = price * quantity;
+  document.getElementById('product-price').innerHTML = `${totalPrice.toFixed(2)} <img src="img/ryal.png" style="width: 20px; height: 20px; vertical-align: middle;">`;
+}
+
+function addToCart() {
+  const productId = document.getElementById('product-id').value;
+  const productTitle = document.getElementById('product-title').innerText;
+  const price = parseFloat(document.getElementById('product-price').getAttribute('data-price'));
+  const quantity = parseInt(document.getElementById('quantity').value);
+  const totalPrice = price * quantity;
+  const productImage = document.getElementById('product-image').src;
+
+  const cartItem = { productId, productTitle, price, quantity, totalPrice, productImage };
+  let cart = JSON.parse(localStorage.getItem('cart')) || [];
+  cart.push(cartItem);
+  localStorage.setItem('cart', JSON.stringify(cart));
+  showToast();
+}
+
+function showToast() {
+  const toastElement = document.getElementById('toast');
+  const toast = new bootstrap.Toast(toastElement);
+  toast.show();
+}
+
+function fetchData() {
+  const url = new URL(window.location.href);
+  const productId = new URLSearchParams(url.search).get('fId');
+
+  fetch('info.json')
+    .then(response => response.json())
+    .then(data => {
+      const product = data.items.find(item => item.id === productId);
+      if (product) {
+        document.getElementById('product-id')?.remove(); // إزالة إذا موجودة قديمة
+        const inputHidden = document.createElement('input');
+        inputHidden.type = "hidden";
+        inputHidden.id = "product-id";
+        inputHidden.value = product.id;
+        document.body.appendChild(inputHidden);
+
+        document.getElementById('product-title').innerText = product.food_name;
+        document.getElementById('product-price').innerText = `${product.price} ريال`;
+        document.getElementById('product-price').setAttribute('data-price', product.price);
+        document.getElementById('product-description').innerText = product.description || 'لا يوجد وصف لهذا المنتج.';
+        document.getElementById('product-image').src = product.images;
+        updatePrice();
+      } else { alert('لم يتم العثور على المنتج.'); }
+    }).catch(error => console.error("خطأ في البيانات: ", error));
+}
+
+// تحميل التعليقات
+function loadComments() {
+  const url = new URL(window.location.href);
+  const productId = new URLSearchParams(url.search).get('fId');
+  fetch('comments.json')
+    .then(res => res.json())
+    .then(comments => {
+      const commentsContainer = document.getElementById('comments-container');
+      commentsContainer.innerHTML = '';
+      if (comments[productId]) {
+        comments[productId].forEach(comment => {
+          const div = document.createElement('div');
+          div.className = "comment";
+          div.innerHTML = `<div class="comment-text">${comment.text}</div>`;
+          commentsContainer.appendChild(div);
+        });
+      }
+    }).catch(err => console.error(err));
+}
+
+// إضافة تعليق جديد
+function addNewComment() {
+  const commentText = document.getElementById('comment-text').value;
+  const productId = document.getElementById('product-id').value;
+  if (!commentText.trim()) { alert("اكتب تعليقك أولاً"); return; }
+  const encodedComment = encodeURIComponent(commentText);
+  const newUrl = `sendcomment.html?product_id=${productId}&comment=${encodedComment}`;
+  window.location.href = newUrl;
+}
+
+window.onload = function() { fetchData(); loadComments(); }
+</script>
+</body>
+</html>
