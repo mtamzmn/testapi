@@ -3,7 +3,7 @@
 // ======================
 // تحميل بيانات SEO من data.json
 // ======================
-const API_URL = "https://cpnelmt.kesug.com/api.php"; 
+const API_URL = "https://moqawel-sa.com/api.php"; 
 async function loadSeoData() {
   try {
     const response = await fetch(API_URL);
@@ -443,4 +443,5 @@ window.addEventListener('DOMContentLoaded', () => {
   loadItems();
   categoryFilter.value = "";
 });
+
 
