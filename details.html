@@ -123,7 +123,7 @@ function fetchData() {
   const url = new URL(window.location.href);
   const productId = new URLSearchParams(url.search).get('fId');
 
-  fetch('info.json')
+  fetch('https://mtamcpnael.shop/api.php')
     .then(response => response.json())
     .then(data => {
       const product = data.items.find(item => item.id === productId);
@@ -179,3 +179,4 @@ window.onload = function() { fetchData(); loadComments(); }
 </script>
 </body>
 </html>
+
