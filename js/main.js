@@ -6,6 +6,9 @@
 const API_URL = "https://mtamcpnael.shop/api.php"; 
 async function loadSeoData() {
   try {
+    // إظهار الـ Loader أثناء تحميل البيانات
+    document.getElementById('loader').style.display = 'flex';
+
     const response = await fetch(API_URL);
     const data = await response.json();
     const setting = data.setting || {};
@@ -107,14 +110,10 @@ async function loadSeoData() {
 
   } catch (error) {
     console.error("خطأ في تحميل بيانات SEO:", error);
+  } finally {
+    // إخفاء الـ Loader بعد تحميل البيانات
+    document.getElementById('loader').style.display = 'none';
   }
-}
-
-// ======================
-// توجيه المستخدم إلى صفحة السلة
-// ======================
-function goToCart() {
-  window.location.href = 'cart.html';
 }
 
 // ======================
@@ -125,6 +124,9 @@ let recentItems = [];
 
 async function loadItems() {
   try {
+    // إظهار الـ Loader أثناء تحميل البيانات
+    document.getElementById('loader').style.display = 'flex';
+
     const response = await fetch(API_URL);
     const data = await response.json();
 
@@ -151,9 +153,18 @@ async function loadItems() {
 
   } catch (err) {
     console.error("خطأ في جلب البيانات:", err);
+  } finally {
+    // إخفاء الـ Loader بعد تحميل البيانات
+    document.getElementById('loader').style.display = 'none';
   }
 }
 
+// ======================
+// توجيه المستخدم إلى صفحة السلة
+// ======================
+function goToCart() {
+  window.location.href = 'cart.html';
+}
 // ======================
 // عرض Carousel
 // ======================
@@ -443,6 +454,7 @@ window.addEventListener('DOMContentLoaded', () => {
   loadItems();
   categoryFilter.value = "";
 });
+
 
 
 
