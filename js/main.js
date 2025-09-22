@@ -3,9 +3,10 @@
 // ======================
 // تحميل بيانات SEO من data.json
 // ======================
+const API_URL = "https://cpnelmt.kesug.com/api.php"; 
 async function loadSeoData() {
   try {
-    const response = await fetch('info.json');
+    const response = await fetch(API_URL);
     const data = await response.json();
     const setting = data.setting || {};
 
@@ -124,7 +125,7 @@ let recentItems = [];
 
 async function loadItems() {
   try {
-    const response = await fetch('info.json');
+    const response = await fetch(API_URL);
     const data = await response.json();
 
     // Carousel
@@ -417,7 +418,7 @@ document.addEventListener('DOMContentLoaded', updateCartCount);
 // ======================
 async function loadCategoriesForNavbar() {
   try {
-    const response = await fetch('info.json');
+    const response = await fetch(API_URL);
     const data = await response.json();
     if (Array.isArray(data.items)) {
       const categories = [...new Set(data.items.map(item => item.category?.trim()))];
@@ -442,3 +443,4 @@ window.addEventListener('DOMContentLoaded', () => {
   loadItems();
   categoryFilter.value = "";
 });
+
