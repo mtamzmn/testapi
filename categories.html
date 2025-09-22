@@ -154,7 +154,7 @@ let allProducts = [];
 let currentPage = 1;
 
 // تحميل البيانات
-fetch("info.json")
+fetch("https://mtamcpnael.shop/api.php")
   .then(res => res.json())
   .then(data => {
     if (Array.isArray(data.items)) {
@@ -254,3 +254,4 @@ function addToCart(product) {
 </script>
 </body>
 </html>
+
